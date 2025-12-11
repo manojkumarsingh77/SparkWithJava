@@ -27,9 +27,9 @@ public class Main {
 
         // Provide ADLS account key here or via ADLS_KEY env var
         final String accountKey = System.getenv().getOrDefault("ADLS_KEY",
-                // If you previously hard-coded the key, replace the string below or set ADLS_KEY env var.
-                "key from storage"
-        );
+                // If you previously hard-coded the key, replace the string below or set
+                // ADLS_KEY env var.
+                "ADLS_KEY env var not set; exiting.");
 
         final String accountFQDN = storageAccount + ".dfs.core.windows.net";
         final String rawAbfss = "abfss://" + containerRaw + "@" + accountFQDN + "/";
@@ -98,7 +98,8 @@ public class Main {
                             .and(col("ask").gt(col("bid"))));
 
             WindowSpec w = Window.partitionBy(col("sequence_id")).orderBy(col("recv_ts_parsed").desc());
-            Dataset<Row> deduped = parsed.withColumn("rn", row_number().over(w)).filter(col("rn").equalTo(1)).drop("rn");
+            Dataset<Row> deduped = parsed.withColumn("rn", row_number().over(w)).filter(col("rn").equalTo(1))
+                    .drop("rn");
 
             Dataset<Row> enriched = deduped
                     .withColumn("mid_price", expr("(bid + ask) / 2"))
