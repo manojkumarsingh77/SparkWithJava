@@ -29,7 +29,7 @@ public class Main {
         final String accountKey = System.getenv().getOrDefault("ADLS_KEY",
                 // If you previously hard-coded the key, replace the string below or set
                 // ADLS_KEY env var.
-                "ADLS_KEY env var not set; exiting.");
+                "Add ADLS key here");
 
         final String accountFQDN = storageAccount + ".dfs.core.windows.net";
         final String rawAbfss = "abfss://" + containerRaw + "@" + accountFQDN + "/";
