@@ -28,7 +28,7 @@ public class Main {
         // Provide ADLS account key here or via ADLS_KEY env var
         final String accountKey = System.getenv().getOrDefault("ADLS_KEY",
                 // If you previously hard-coded the key, replace the string below or set ADLS_KEY env var.
-                "***REMOVED***"
+                "key from storage"
         );
 
         final String accountFQDN = storageAccount + ".dfs.core.windows.net";
