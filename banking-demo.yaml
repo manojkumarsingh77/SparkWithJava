@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-dashboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: banking-dashboard
+  template:
+    metadata:
+      labels:
+        app: banking-dashboard
+    spec:
+      containers:
+        - name: banking-dashboard
+          image: bankingacrdemo.azurecr.io/banking-dashboard:v3
+          ports:
+            - containerPort: 5000
+          env:
+            - name: SYNAPSE_SERVER
+              value: "datahulkworkspace-ondemand.sql.azuresynapse.net"
+            - name: SYNAPSE_USER
+              value: "sqladminuser"
+            - name: SYNAPSE_PASSWORD
+              value: "Bappamorya!9"
+            - name: SYNAPSE_DB
+              value: "banking_insights"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 40
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: banking-dashboard-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: banking-dashboard
+  ports:
+    - port: 80
+      targetPort: 5000
